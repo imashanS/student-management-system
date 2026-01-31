@@ -1,10 +1,14 @@
 package com.imashan.studentmanagementsystem.controller;
 
+
+import com.imashan.studentmanagementsystem.dto.StudentRequestDTO;
+import com.imashan.studentmanagementsystem.dto.StudentResponseDTO;
 import com.imashan.studentmanagementsystem.entity.Student;
 import com.imashan.studentmanagementsystem.service.StudentService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/students")
@@ -16,25 +20,35 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-    // CREATE
     @PostMapping
-    public Student createStudent(@RequestBody Student student) {
-        return studentService.createStudent(student);
+    public StudentResponseDTO createStudent(@RequestBody StudentRequestDTO dto) {
+        Student student = new Student(dto.getName(), dto.getEmail(), dto.getAge());
+        Student saved = studentService.createStudent(student);
+        return new StudentResponseDTO(
+                saved.getId(),
+                saved.getName(),
+                saved.getEmail(),
+                saved.getAge()
+        );
     }
 
-    // READ ALL
     @GetMapping
-    public List<Student> getAllStudents() {
-        return studentService.getAllStudents();
+    public List<StudentResponseDTO> getAllStudents() {
+        return studentService.getAllStudents()
+                .stream()
+                .map(s -> new StudentResponseDTO(
+                        s.getId(), s.getName(), s.getEmail(), s.getAge()))
+                .collect(Collectors.toList());
     }
 
-    // READ BY ID
     @GetMapping("/{id}")
-    public Student getStudentById(@PathVariable Long id) {
-        return studentService.getStudentById(id);
+    public StudentResponseDTO getStudentById(@PathVariable Long id) {
+        Student s = studentService.getStudentById(id);
+        return new StudentResponseDTO(
+                s.getId(), s.getName(), s.getEmail(), s.getAge()
+        );
     }
 
-    // DELETE
     @DeleteMapping("/{id}")
     public void deleteStudent(@PathVariable Long id) {
         studentService.deleteStudent(id);

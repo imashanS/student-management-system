@@ -2,6 +2,7 @@ package com.imashan.studentmanagementsystem.service;
 
 import com.imashan.studentmanagementsystem.entity.Student;
 import com.imashan.studentmanagementsystem.repository.StudentRepository;
+import com.imashan.studentmanagementsystem.exception.StudentNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class StudentService {
 
     public Student getStudentById(Long id) {
         return studentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
+                .orElseThrow(() -> new StudentNotFoundException(id));
     }
 
     public void deleteStudent(Long id) {
