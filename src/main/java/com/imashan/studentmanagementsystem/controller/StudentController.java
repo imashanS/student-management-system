@@ -6,7 +6,7 @@ import com.imashan.studentmanagementsystem.dto.StudentResponseDTO;
 import com.imashan.studentmanagementsystem.entity.Student;
 import com.imashan.studentmanagementsystem.service.StudentService;
 import org.springframework.web.bind.annotation.*;
-
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +21,7 @@ public class StudentController {
     }
 
     @PostMapping
-    public StudentResponseDTO createStudent(@RequestBody StudentRequestDTO dto) {
+    public StudentResponseDTO createStudent(@Valid @RequestBody StudentRequestDTO dto) {
         Student student = new Student(dto.getName(), dto.getEmail(), dto.getAge());
         Student saved = studentService.createStudent(student);
         return new StudentResponseDTO(
